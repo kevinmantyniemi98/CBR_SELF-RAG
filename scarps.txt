@@ -1,0 +1,1 @@
+Lets think together. Since you are smarter than any human, including me in your thoughts how should recall be implemented into this? Should it work like retrieve? 
