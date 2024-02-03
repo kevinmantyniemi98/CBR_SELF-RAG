@@ -1,0 +1,4 @@
+Notes:
+This script needs adjustments to define the actual logic for "Recall" and more nuanced "Retain" and "Revise" criteria, which should consider the specifics of utility, relevance, and support within your setup.
+The example uses a static utility score check to illustrate decision-making. In practice, this should be replaced with dynamic assessments possibly involving NLP techniques, similarity measures, or manual criteria definitions that match your project's goals.
+Ensure the format (e.g., utility score presence and computation) and the structure of your data match those anticipated by the script. This might necessitate adjustments in the load_data function and throughout the augmentation logic to fit the actual schema of the SELF-RAG dataset you're working with.
