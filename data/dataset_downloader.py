@@ -3,7 +3,6 @@ import logging
 from datasets import load_dataset
 import os
 import json
-from tqdm import tqdm
 import pickle
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -12,6 +11,7 @@ def parse_arguments():
     """
     Parse command line arguments.
     """
+    print('inParser')
     parser = argparse.ArgumentParser(description="Download and Process Hugging Face datasets")
     parser.add_argument("--dataset_name", type=str, required=True, help="Name of the dataset on Hugging Face.")
     parser.add_argument("--split", type=str, choices=['train', 'validation', 'test'], help="Which split of the dataset to download. If not specified, all splits are downloaded.")
