@@ -1,0 +1,148 @@
+     
+        
+        
+        
+    def explain_forget(self, text):
+          
+    def extract_summary(self, response):  
+        """
+        Extracts a summary from the OpenAI response, if one is present.
+
+        Args:
+            response: The raw response object returned by the OpenAI API.
+
+        Returns:
+            str: The extracted summary, or None if no summary is found.
+        """
+
+        try:
+            # Placeholder: Update based on your response structure
+            for choice in response["choices"]:
+                if "Summarize:" in choice["text"]:
+                    summary_text = choice["text"].split("Summarize:")[1].strip()
+                    return summary_text
+
+            # Handle cases where no summary section is found
+            print("Warning: No summary found in response.")
+            return None 
+
+        except KeyError as e:
+            print(f"Error extracting summary. Missing expected key: {e}")
+            return None
+
+    def extract_categories(self, response):
+        """
+        Extracts relevant categories or tags from the OpenAI response.
+
+        Args:
+            response: The raw response object returned by the OpenAI API.
+
+        Returns:
+            list: A list of extracted categories/tags, or an empty list if none are found.
+        """
+
+        try:
+            # Placeholder: Update based on your response structure
+            for choice in response["choices"]:
+                if "Categorize:" in choice["text"]:
+                    categories_text = choice["text"].split("Categorize:")[1].strip()
+                    categories = categories_text.split(",")  # Assume comma separation
+                    return [category.strip() for category in categories]
+
+            # Handle cases where no 'Categorize:' section is found
+            print("Warning: No categories found in response.")
+            return []  # Return an empty list
+
+        except KeyError as e:
+            print(f"Error extracting categories. Missing expected key: {e}")
+            return [] 
+        
+    def extract_explanation(self, response):
+        """
+        Extracts the explanation for the "Remember" or "Forget" decision from the OpenAI response.
+
+        Args:
+            response: The raw response object returned by the OpenAI API.
+
+        Returns:
+            str: The extracted explanation, or None if no explanation is found.
+        """
+
+        try:
+            # Placeholder: Update based on how your LLM presents explanations
+            for choice in response["choices"]:
+                if "Explanation (Optional):" in choice["text"]:
+                    explanation_text = choice["text"].split("Explanation (Optional):")[1].strip()
+                    return explanation_text
+
+            # Handle cases where no 'Explanation (Optional):' section is found
+            print("Warning: No explanation found in response.")
+            return None 
+
+        except KeyError as e:
+            print(f"Error extracting explanation. Missing expected key: {e}")
+            return None
+          
+    def summarize(self, text):
+      vectorizer = TfidfVectorizer() 
+      vectors = vectorizer.fit_transform([text])  
+      feature_names = vectorizer.get_feature_names_out()  # Get vocabulary
+      dense = vectors.todense().tolist()[0] 
+      df = pd.DataFrame({'terms': feature_names, 'weights': dense})
+      top_n = 3  # Example: Extract top 3 important sentences
+      top_sentences = df.sort_values(by='weights', ascending=False)['terms'].iloc[:top_n]
+      summary = " ".join(top_sentences)
+      return summary
+    
+    def summarize2(self, text):
+      prompt = f"Provide a concise summary of this text: {text}\nSummary:"
+      response = openai.Completion.create(engine=self.model_name, prompt=prompt, max_tokens=50)  # Adjust max_tokens
+      return response["choices"][0]["text"].strip() 
+    
+    def categorize(self, text):
+      categories = []
+      if "neural networks" in text or "deep learning" in text:
+          categories.append("Machine Learning")
+      if "calculus" in text or "differential equations" in text:
+          categories.append("Mathematics")
+      # ... add more rules as needed
+      return categories
+    
+    def categorize2(self, text):
+      taxonomy = {
+          "Science": ["biology", "physics", "chemistry"],
+          "Technology": ["programming", "AI", "web development"],
+          # ... more categories
+      }
+      categories = []
+      for top_level_category, keywords in taxonomy.items():
+          for keyword in keywords:
+              if keyword in text.lower():
+                  categories.append(top_level_category)
+                  break  # Optionally stop on the first matched category
+      return categories
+    
+
+        
+    def connect_to_existing_knowledge(self, text):
+      # Key concept extraction (you'll need a mechanism for this)
+      key_concepts = extract_important_concepts(text)  
+
+      for concept in key_concepts:
+          search_url = f"https://www.google.com/search?q={concept} relation existing knowledge" 
+          webbrowser.open(search_url) 
+          # ... instead of directly opening searches, potentially you would refine/process results  
+          
+          ###############
+
+
+      if not self.analyze_text_value(text):
+          reasons = []
+          if "common knowledge" in text.lower():
+              reasons.append("contains widely known information")
+          if len(self.explanation_reasons) == 0:  # Based on feature/keyword importance
+              reasons.append("lacks relevant terminology")
+
+          if reasons:
+              return "This text was not worth remembering because it " + " and ".join(reasons) + "."
+      return None
