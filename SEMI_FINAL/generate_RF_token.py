@@ -12,8 +12,10 @@ import PrettyPrintJsonl
 import display
 
 logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s')
-
-
+with open('SEMI_FINAL\key.txt', 'r') as file:
+    # Read the entire content of the file into a string
+    file_content = file.read()
+openai.api_key = file_content
 
 PROMPT_TEMPLATE_GEM2 = """Input: "{text}"
 
