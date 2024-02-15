@@ -1,3 +1,4 @@
 pip
 *.json
 *.jsonl
+SEMI_FINAL/key.txt
