@@ -13,7 +13,7 @@ import display
 
 logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s')
 
-openai.api_key = "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"
+
 
 PROMPT_TEMPLATE_GEM2 = """Input: "{text}"
 
